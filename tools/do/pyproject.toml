@@ -1,6 +1,6 @@
 [project]
 name = "do-cli"
-version = "1.0.0"
+version = "1.0.1"
 description = "Unified personal workflow CLI - daily notes, GTD, presentations, reading, knowledge, repos"
 readme = "README.md"
 requires-python = ">=3.11"

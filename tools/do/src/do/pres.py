@@ -28,9 +28,9 @@ def list(show_all: bool):
         click.echo("📊 No presentations tracked")
         return
     
-    # Group by status
-    todo = [p for p in items if p['status'] in ('planned', 'in_progress')]
-    done = [p for p in items if p['status'] == 'completed']
+    # Group by status (handle both old and new status values)
+    todo = [p for p in items if p['status'] in ('planned', 'in_progress', 'todo')]
+    done = [p for p in items if p['status'] in ('completed', 'done')]
     archived = [p for p in items if p['status'] == 'archived']
     
     click.echo(f"📊 Presentations (Total: {len(items)} | Todo: {len(todo)} | Done: {len(done)})\n")

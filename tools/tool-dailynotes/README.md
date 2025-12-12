@@ -33,11 +33,23 @@ dailynotes --dry-run
 dailynotes --vault my-vault
 ```
 
+## Calendar Sources
+
+**Primary: Google Calendar API**
+- Uses existing credentials from obs-dailynotes
+- Set environment variables:
+  - `GCAL_CREDS_PATH` - Path to Google OAuth credentials JSON
+  - `GCAL_TOKEN_PATH` - Path to stored OAuth token
+
+**Fallback: macOS Calendar (AppleScript)**
+- Used automatically if Google credentials not available
+- Works with any calendar synced to macOS Calendar app
+
 ## Output
 
 Creates `~/switchboard/dailynote/YYYY-MM-DD.md` with:
 
-- **Calendar**: Today's events from macOS Calendar app
+- **Calendar**: Today's events (Google Calendar or macOS fallback)
 - **Projects**: Active projects from `project-status.json` with next actions
 - **Tasks**: Link to GTD Dashboard
 - **Notes**: Empty section for daily observations
@@ -55,6 +67,7 @@ date: 2025-12-12
 
 - 09:00-09:30 Team Standup
 - 14:00-15:00 Project Review (Zoom)
+- (All day) Company Holiday
 
 ## Projects
 
@@ -75,14 +88,25 @@ date: 2025-12-12
 
 ```
 
+## Configuration
+
+To use Google Calendar (recommended), copy your existing credentials:
+
+```bash
+# These should already be set in your obs-dailynotes .env
+export GCAL_CREDS_PATH=~/.config/google/credentials.json
+export GCAL_TOKEN_PATH=~/.config/google/token.json
+```
+
 ## Data Sources
 
-- **Calendar**: macOS Calendar app via AppleScript
+- **Calendar**: Google Calendar API (primary) or macOS Calendar (fallback)
 - **Projects**: `~/switchboard/amplifier/project-status.json`
 - **Output**: `~/switchboard/dailynote/`
 
 ## Requirements
 
-- macOS (uses AppleScript for calendar)
 - Python 3.11+
+- macOS (for AppleScript fallback)
 - Obsidian with vault named "switchboard"
+- Google Calendar credentials (optional, for Google API)

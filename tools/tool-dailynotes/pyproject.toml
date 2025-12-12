@@ -1,16 +1,13 @@
 [project]
 name = "dailynotes"
-version = "1.0.0"
-description = "Generate daily notes with calendar events and project status"
+version = "2.0.0"
+description = "Wrapper for obs-dailynotes - daily note generation"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 
 dependencies = [
     "click>=8.1.0",
-    "google-api-python-client>=2.0.0",
-    "google-auth>=2.0.0",
-    "google-auth-oauthlib>=1.0.0",
 ]
 
 [project.scripts]

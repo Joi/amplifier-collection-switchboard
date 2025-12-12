@@ -1,69 +1,70 @@
-"""CLI interface for dailynotes tool.
+"""CLI wrapper for obs-dailynotes.
 
-Usage:
-    dailynotes              # Generate today's note and open in Obsidian
-    dailynotes --no-open    # Generate without opening
-    dailynotes --dry-run    # Show what would be generated
+Delegates to the Node.js tool at ~/obs-dailynotes for actual work.
 """
 
 import subprocess
+import sys
 from pathlib import Path
 
 import click
 
-from .generator import (
-    generate_daily_note,
-    get_obsidian_uri,
-    get_today_date,
-    write_daily_note,
-)
+OBS_DAILYNOTES_PATH = Path.home() / "obs-dailynotes"
 
 
-def get_switchboard_path() -> Path:
-    """Get path to switchboard vault."""
-    return Path.home() / "switchboard"
+def check_obs_dailynotes():
+    """Check if obs-dailynotes is available."""
+    if not OBS_DAILYNOTES_PATH.exists():
+        click.echo(f"Error: obs-dailynotes not found at {OBS_DAILYNOTES_PATH}", err=True)
+        sys.exit(1)
+    if not (OBS_DAILYNOTES_PATH / "package.json").exists():
+        click.echo(f"Error: package.json not found in {OBS_DAILYNOTES_PATH}", err=True)
+        sys.exit(1)
 
 
-@click.command()
-@click.option('--no-open', is_flag=True, help="Don't open in Obsidian after generating")
-@click.option('--dry-run', is_flag=True, help="Show what would be generated without writing")
-@click.option('--vault', default='switchboard', help="Obsidian vault name (default: switchboard)")
-def cli(no_open: bool, dry_run: bool, vault: str):
-    """Generate today's daily note with calendar and projects.
+@click.group()
+def cli():
+    """Daily notes and workflow tools.
     
-    Creates a markdown file at ~/switchboard/dailynote/YYYY-MM-DD.md
-    with calendar events and active project status.
+    Wrapper around ~/obs-dailynotes for unified access.
     """
-    switchboard_path = get_switchboard_path()
+    pass
+
+
+@cli.command()
+def daily():
+    """Generate today's daily note and open in Obsidian."""
+    check_obs_dailynotes()
     
-    if not switchboard_path.exists():
-        click.echo(f"Error: Switchboard vault not found at {switchboard_path}", err=True)
-        raise SystemExit(1)
+    result = subprocess.run(
+        ["npm", "run", "daily"],
+        cwd=OBS_DAILYNOTES_PATH
+    )
+    sys.exit(result.returncode)
+
+
+@cli.command()
+def pres():
+    """Manage presentations (list, add, complete)."""
+    check_obs_dailynotes()
     
-    today = get_today_date()
-    click.echo(f"📅 Generating daily note for {today}...")
+    result = subprocess.run(
+        ["npm", "run", "pres"],
+        cwd=OBS_DAILYNOTES_PATH
+    )
+    sys.exit(result.returncode)
+
+
+@cli.command()
+def read():
+    """Manage reading queue."""
+    check_obs_dailynotes()
     
-    # Generate content
-    content = generate_daily_note(switchboard_path)
-    
-    if dry_run:
-        click.echo("\n--- DRY RUN - Would generate: ---\n")
-        click.echo(content)
-        click.echo("\n--- END ---")
-        return
-    
-    # Write file
-    note_path = write_daily_note(switchboard_path, content)
-    click.echo(f"✅ Created: {note_path}")
-    
-    # Open in Obsidian
-    if not no_open:
-        uri = get_obsidian_uri(note_path, vault)
-        click.echo(f"📂 Opening in Obsidian...")
-        subprocess.run(['open', uri], check=False)
-    else:
-        uri = get_obsidian_uri(note_path, vault)
-        click.echo(f"📎 Open with: {uri}")
+    result = subprocess.run(
+        ["npm", "run", "read"],
+        cwd=OBS_DAILYNOTES_PATH
+    )
+    sys.exit(result.returncode)
 
 
 if __name__ == "__main__":

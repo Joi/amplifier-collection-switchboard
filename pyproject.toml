@@ -1,0 +1,19 @@
+[project]
+name = "switchboard"
+version = "1.0.0"
+description = "Switchboard collection - personal workflow tools for daily notes, GTD, presentations, and knowledge curation"
+
+[project.urls]
+repository = "https://github.com/joi/amplifier-collection-switchboard"
+
+[tool.amplifier.collection]
+author = "Joi Ito"
+capabilities = [
+    "Daily note generation with calendar and project status",
+    "GTD workflow management with Apple Reminders integration",
+    "Presentations tracking with priority and deadlines",
+    "Reading queue management",
+    "Knowledge vault curation and gap detection",
+    "Multi-repository sync and status"
+]
+requires = {}

@@ -2,9 +2,7 @@
 
 Multi-repository sync and status.
 
-## Status: Planned
-
-This tool will be implemented in Phase 5 (Milestone 5).
+## Status: Complete
 
 ## Functionality
 

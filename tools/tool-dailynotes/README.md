@@ -2,36 +2,87 @@
 
 Generate daily notes with calendar events and project status.
 
-## Status: Planned
+## Status: Implemented
 
-This tool will be implemented in Phase 1 (Milestone 1).
+## Installation
 
-## Functionality
-
-- Fetch calendar events via icalBuddy or AppleScript
-- Read project status from `~/switchboard/amplifier/project-status.json`
-- Generate Obsidian-compatible markdown
-- Write to `~/switchboard/dailynote/YYYY-MM-DD.md`
-- Open in Obsidian via URI
-
-## Source Migration
-
-Port logic from: `~/obs-dailynotes/lib/dailynotes.js`
-
-## Implementation Notes
-
-```python
-# tools/tool-dailynotes/main.py
-class DailyNotesTool:
-    name = "dailynotes"
-    description = "Generate daily note with calendar, projects, and tasks"
-    
-    async def execute(self, input: dict) -> ToolResult:
-        # 1. Get today's date
-        # 2. Fetch calendar events
-        # 3. Read project-status.json
-        # 4. Generate markdown from template
-        # 5. Write to dailynote directory
-        # 6. Return Obsidian URI
-        pass
+```bash
+cd tools/tool-dailynotes
+uv run dailynotes
 ```
+
+Or install globally:
+```bash
+uv tool install .
+dailynotes
+```
+
+## Usage
+
+```bash
+# Generate today's note and open in Obsidian
+dailynotes
+
+# Generate without opening
+dailynotes --no-open
+
+# Preview what would be generated
+dailynotes --dry-run
+
+# Use different vault name
+dailynotes --vault my-vault
+```
+
+## Output
+
+Creates `~/switchboard/dailynote/YYYY-MM-DD.md` with:
+
+- **Calendar**: Today's events from macOS Calendar app
+- **Projects**: Active projects from `project-status.json` with next actions
+- **Tasks**: Link to GTD Dashboard
+- **Notes**: Empty section for daily observations
+
+## Example Output
+
+```markdown
+---
+date: 2025-12-12
+---
+
+# Friday, December 12, 2025
+
+## Calendar
+
+- 09:00-09:30 Team Standup
+- 14:00-15:00 Project Review (Zoom)
+
+## Projects
+
+### Active
+- 🟠 **[[amplifier/POC-THEBOOK.md|The Practice of Change 2.0]]**
+  - Next: Develop detailed biographical timeline
+- 🟡 **[[amplifier/KNOWLEDGE-CURATOR.md|Knowledge Curator Agent]]**
+  - Next: Integrate paper-search MCP
+
+### Planned (High Priority)
+- [[amplifier/WORKFLOW-MIGRATION-STRATEGY.md|Workflow Migration]]
+
+## Tasks
+
+[[GTD Dashboard]]
+
+## Notes
+
+```
+
+## Data Sources
+
+- **Calendar**: macOS Calendar app via AppleScript
+- **Projects**: `~/switchboard/amplifier/project-status.json`
+- **Output**: `~/switchboard/dailynote/`
+
+## Requirements
+
+- macOS (uses AppleScript for calendar)
+- Python 3.11+
+- Obsidian with vault named "switchboard"

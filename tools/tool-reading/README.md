@@ -2,32 +2,85 @@
 
 Reading queue management for URLs and PDFs.
 
-## Status: Planned
+## Status: Implemented
 
-This tool will be implemented in Phase 3 (Milestone 3).
+## Installation
 
-## Functionality
-
-- Add URLs and PDFs to reading queue
-- Priority-based sorting
-- Track reading status (to-read, reading, read)
-- Generate reading list dashboard
+```bash
+cd tools/tool-reading
+uv run reading --help
+```
 
 ## Commands
 
-- `list` - Show reading queue
-- `add` - Add URL or PDF to queue
-- `start` - Mark as currently reading
-- `done` - Mark as read
-- `priority` - Change item priority
+```bash
+# List reading queue
+reading list
+reading list --status to-read
+reading list --type url
+reading list --priority high
+reading list --all  # Include archived
+
+# Add to queue
+reading add "https://example.com/article" --title "Article Title"
+reading add "/path/to/paper.pdf" --title "Paper Title" --estimate 30
+reading add URL --title "Title" --priority high --tags "ai,research"
+
+# Reading flow
+reading start <id>    # Start reading (opens URL/PDF)
+reading finish <id>   # Mark as read
+reading archive <id>  # Archive
+
+# Update metadata
+reading update <id> --priority urgent
+reading update <id> --add-tag "important"
+
+# Open without changing status
+reading open <id>
+
+# Statistics
+reading stats
+```
+
+## Data Format
+
+Reading items stored in `~/switchboard/data/reading-queue.json`:
+
+```json
+{
+  "id": "read-20251212-001",
+  "type": "url",
+  "title": "Article Title",
+  "url": "https://example.com/article",
+  "path": null,
+  "status": "to-read",
+  "priority": "medium",
+  "deadline": null,
+  "source": "manual",
+  "tags": ["ai", "research"],
+  "estimatedMinutes": 15
+}
+```
+
+## Item Types
+
+- `url` 🔗 - Web articles, blog posts
+- `pdf` 📄 - PDF documents, papers
+
+## Status Flow
+
+```
+to-read → reading → read → archived
+```
 
 ## Priority Levels
 
-- `urgent` - Time-sensitive
-- `high` - Important for current work
-- `medium` - General interest
-- `low` - When time permits
+- `urgent` 🔴 - Time-sensitive
+- `high` 🟠 - Important for current work
+- `medium` 🟡 - General interest (default)
+- `low` 🟢 - When time permits
 
-## Source Migration
+## Requirements
 
-Port logic from: `~/obs-dailynotes/lib/reading.js`
+- Python 3.11+
+- macOS (uses `open` command for URLs/PDFs)

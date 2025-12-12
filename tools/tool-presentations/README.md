@@ -2,30 +2,84 @@
 
 Track presentations with priorities and deadlines.
 
-## Status: Planned
+## Status: Implemented
 
-This tool will be implemented in Phase 3 (Milestone 3).
+## Installation
 
-## Functionality
-
-- Add new presentations with topic, deadline, priority
-- Track presentation status (added, started, completed)
-- Store Notion/Slack URLs
-- List presentations by priority or deadline
-- Mark presentations as started/completed
+```bash
+cd tools/tool-presentations
+uv run presentations --help
+```
 
 ## Commands
 
-- `list` - Show all presentations
-- `add` - Add new presentation
-- `start` - Mark as started
-- `complete` - Mark as completed
-- `due` - Show presentations due soon
+```bash
+# List presentations
+presentations list
+presentations list --status todo
+presentations list --priority urgent
+presentations list --all  # Include archived
 
-## Data Storage
+# Add presentation
+presentations add "https://docs.google.com/presentation/d/..." --title "My Talk"
+presentations add URL --title "Talk" --deadline 2025-01-15 --priority high
+presentations add URL --title "Talk" --notion "https://notion.so/..." --slack "https://slack.com/..."
 
-Presentations stored in JSON format in switchboard vault.
+# Manage status
+presentations start <id>       # Mark as started
+presentations complete <id>    # Mark as done
+presentations archive <id>     # Archive
 
-## Source Migration
+# Update metadata
+presentations update <id> --priority urgent
+presentations update <id> --deadline 2025-02-01
+presentations update <id> --add-tag "conference"
 
-Port logic from: `~/obs-dailynotes/lib/presentations.js`
+# Open in browser
+presentations open <id>           # Open slides
+presentations open <id> --notion  # Open Notion brief
+presentations open <id> --slack   # Open Slack thread
+
+# Statistics
+presentations stats
+```
+
+## Data Format
+
+Presentations are stored in `~/switchboard/data/presentations.json`:
+
+```json
+{
+  "id": "pres-20251212-001",
+  "title": "My Talk",
+  "url": "https://docs.google.com/presentation/d/...",
+  "notionUrl": "https://notion.so/...",
+  "slackUrl": null,
+  "status": "todo",
+  "priority": "high",
+  "deadline": "2025-01-15",
+  "tags": ["conference"],
+  "estimatedHours": 4,
+  "actualHours": 0
+}
+```
+
+## Priority Levels
+
+- `urgent` 🔴 - Immediate attention required
+- `high` 🟠 - Important, due soon
+- `medium` 🟡 - Standard priority (default)
+- `low` 🟢 - When time permits
+
+## Status Flow
+
+```
+todo → done → archived
+  ↓
+archived (can archive from any status)
+```
+
+## Requirements
+
+- Python 3.11+
+- Google Slides URLs only (validation enforced)

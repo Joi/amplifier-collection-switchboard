@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "switchboard"
+version = "1.0.0"
+description = "Personal workflow collection - daily notes, GTD, presentations, reading, knowledge curation"
+readme = "../README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+[tool.amplifier.collection]
+author = "Joi Ito"
+capabilities = [
+    "daily-notes",
+    "gtd-workflow",
+    "presentation-tracking",
+    "reading-queue",
+    "knowledge-curation",
+    "repository-sync"
+]

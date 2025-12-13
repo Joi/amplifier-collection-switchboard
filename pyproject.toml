@@ -1,19 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "switchboard"
 version = "1.0.0"
 description = "Switchboard collection - personal workflow tools for daily notes, GTD, presentations, and knowledge curation"
+requires-python = ">=3.11"
+license = { text = "MIT" }
 
 [project.urls]
-repository = "https://github.com/joi/amplifier-collection-switchboard"
+repository = "https://github.com/Joi/amplifier-collection-switchboard"
 
 [tool.amplifier.collection]
 author = "Joi Ito"
 capabilities = [
-    "Daily note generation with calendar and project status",
-    "GTD workflow management with Apple Reminders integration",
-    "Presentations tracking with priority and deadlines",
-    "Reading queue management",
-    "Knowledge vault curation and gap detection",
-    "Multi-repository sync and status"
+    "daily-notes",
+    "gtd-workflow", 
+    "presentation-tracking",
+    "reading-queue",
+    "knowledge-curation",
+    "repository-sync"
 ]
-requires = {}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["amplifier_collection_switchboard*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.md", "*.yaml", "*.yml"]

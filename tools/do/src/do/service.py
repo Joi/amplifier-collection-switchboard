@@ -103,7 +103,8 @@ def get_tasks_by_timeframe(reminders: list[dict]) -> dict:
         
         try:
             due = datetime.fromisoformat(due_date.replace('Z', '+00:00'))
-            due_local = due.replace(tzinfo=None)
+            # Convert UTC to local time
+            due_local = due.astimezone().replace(tzinfo=None)
             
             if due_local.date() == today.date():
                 due_today.append(r)

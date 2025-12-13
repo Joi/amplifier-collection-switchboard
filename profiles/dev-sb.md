@@ -1,34 +1,14 @@
 ---
 profile:
   name: dev-sb
-  version: 1.0.0
-  description: Personal workflow + full development capabilities
-  extends: sb  # ← Inherits all switchboard context
-
-session:
-  orchestrator:
-    module: loop-basic
-    source: git+https://github.com/microsoft/amplifier-module-loop-basic@main
-  context:
-    module: context-simple
-    source: git+https://github.com/microsoft/amplifier-module-context-simple@main
-
-providers:
-  - module: provider-anthropic
-    source: git+https://github.com/microsoft/amplifier-module-provider-anthropic@main
-    config:
-      default_model: claude-sonnet-4-5
-
-tools:
-  - module: tool-bash
-    source: git+https://github.com/microsoft/amplifier-module-tool-bash@main
-  - module: tool-filesystem
-    source: git+https://github.com/microsoft/amplifier-module-tool-filesystem@main
-  - module: tool-grep
-    source: git+https://github.com/microsoft/amplifier-module-tool-grep@main
-  - module: tool-glob
-    source: git+https://github.com/microsoft/amplifier-module-tool-glob@main
+  version: 1.1.0
+  description: Personal workflow + scenario tool development
+  extends: toolkit:toolkit-dev  # ← Full dev tools + scenario tool patterns
 ---
+
+# Switchboard Context
+
+@sb:profiles/sb.md
 
 # Dev-Switchboard Profile
 
@@ -52,7 +32,7 @@ Beyond the `do` CLI workflows, you can also:
 
 | Repo | Path | Purpose |
 |------|------|---------|
-| amplifier-collection-switchboard | `~/amplifier-collection-switchboard` | The `do` CLI tools |
+| amp-sb | `~/amp-sb` | The `do` CLI tools |
 | obs-dailynotes | `~/obs-dailynotes` | Node.js daily note engine |
 | switchboard | `~/switchboard` | Obsidian vault (data) |
 

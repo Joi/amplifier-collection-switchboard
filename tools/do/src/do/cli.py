@@ -17,6 +17,9 @@ from .pres import pres
 from .reading import read
 from .knowledge import knowledge
 from .repos import repos
+from .transcribe import transcribe
+from .blog import blog
+from .web2md import web2md
 
 
 @click.group()
@@ -37,6 +40,9 @@ cli.add_command(pres)
 cli.add_command(read)
 cli.add_command(knowledge)
 cli.add_command(repos)
+cli.add_command(transcribe)
+cli.add_command(blog)
+cli.add_command(web2md)
 
 
 if __name__ == "__main__":

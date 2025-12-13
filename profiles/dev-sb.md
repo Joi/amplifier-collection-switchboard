@@ -1,9 +1,9 @@
 ---
 profile:
-  name: dev-switchboard
+  name: dev-sb
   version: 1.0.0
   description: Personal workflow + full development capabilities
-  extends: switchboard  # ← Inherits all switchboard context
+  extends: sb  # ← Inherits all switchboard context
 
 session:
   orchestrator:

@@ -1,6 +1,6 @@
 ---
 profile:
-  name: switchboard
+  name: sb
   version: 2.0.0
   description: Personal workflow assistant - daily notes, GTD, presentations, reading
   extends: foundation:base

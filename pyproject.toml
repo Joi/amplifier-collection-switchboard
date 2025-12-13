@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "switchboard"
+name = "sb"
 version = "1.0.0"
 description = "Switchboard collection - personal workflow tools for daily notes, GTD, presentations, and knowledge curation"
 requires-python = ">=3.11"

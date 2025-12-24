@@ -1,4 +1,4 @@
-"""Transcribe - wraps ~/amplifier/scenarios/transcribe."""
+"""Transcribe - uses local tool-transcribe module."""
 
 import subprocess
 import sys
@@ -6,14 +6,13 @@ from pathlib import Path
 
 import click
 
-AMPLIFIER_PATH = Path.home() / "amplifier"
-TRANSCRIBE_MODULE = "scenarios.transcribe"
+TOOL_PATH = Path(__file__).parent.parent.parent.parent / "tool-transcribe"
 
 
-def check_amplifier():
-    """Check if amplifier with transcribe is available."""
-    if not (AMPLIFIER_PATH / "scenarios" / "transcribe").exists():
-        click.echo(f"Error: transcribe not found at {AMPLIFIER_PATH}/scenarios/transcribe", err=True)
+def check_tool():
+    """Check if tool-transcribe is available."""
+    if not TOOL_PATH.exists():
+        click.echo(f"Error: tool-transcribe not found at {TOOL_PATH}", err=True)
         sys.exit(1)
 
 
@@ -30,11 +29,11 @@ def transcribe(sources, resume, no_enhance, force_download):
         do transcribe podcast.mp3
         do transcribe video1.mp4 video2.mp4 --resume
     """
-    check_amplifier()
+    check_tool()
     
     click.echo("🎙️ Starting transcription...")
     
-    cmd = ["uv", "run", "python", "-m", TRANSCRIBE_MODULE, "transcribe"]
+    cmd = ["uv", "run", "transcribe", "transcribe"]
     
     if resume:
         cmd.append("--resume")
@@ -45,5 +44,5 @@ def transcribe(sources, resume, no_enhance, force_download):
     
     cmd.extend(sources)
     
-    result = subprocess.run(cmd, cwd=AMPLIFIER_PATH)
+    result = subprocess.run(cmd, cwd=TOOL_PATH)
     sys.exit(result.returncode)

@@ -1,4 +1,4 @@
-"""Web to Markdown - wraps ~/amplifier/scenarios/web_to_md."""
+"""Web to Markdown - uses local tool-web2md module."""
 
 import subprocess
 import sys
@@ -6,40 +6,45 @@ from pathlib import Path
 
 import click
 
-AMPLIFIER_PATH = Path.home() / "amplifier"
+TOOL_PATH = Path(__file__).parent.parent.parent.parent / "tool-web2md"
 
 
-def check_web_to_md():
-    """Check if web_to_md is available."""
-    if not (AMPLIFIER_PATH / "scenarios" / "web_to_md").exists():
-        click.echo(f"Error: web_to_md not found at {AMPLIFIER_PATH}/scenarios/web_to_md", err=True)
+def check_tool():
+    """Check if tool-web2md is available."""
+    if not TOOL_PATH.exists():
+        click.echo(f"Error: tool-web2md not found at {TOOL_PATH}", err=True)
         sys.exit(1)
 
 
 @click.command("web2md")
-@click.argument("url")
+@click.argument("urls", nargs=-1, required=True)
 @click.option("--output", "-o", type=click.Path(), help="Output directory")
 @click.option("--no-images", is_flag=True, help="Skip downloading images")
-def web2md(url, output, no_images):
-    """Convert a web page to clean markdown.
+@click.option("--resume", is_flag=True, help="Resume from saved state")
+def web2md(urls, output, no_images, resume):
+    """Convert web pages to clean markdown.
     
-    Downloads the page, extracts content, cleans up formatting,
+    Downloads pages, extracts content, cleans up formatting,
     and saves as organized markdown with images.
     
     Examples:
         do web2md https://example.com/article
         do web2md https://example.com/page -o ~/notes/
+        do web2md https://site1.com https://site2.com
     """
-    check_web_to_md()
+    check_tool()
     
-    click.echo(f"🌐 Converting {url} to markdown...")
+    click.echo(f"🌐 Converting {len(urls)} URL(s) to markdown...")
     
-    cmd = ["uv", "run", "python", "-m", "scenarios.web_to_md", url]
+    cmd = ["uv", "run", "web2md"]
+    cmd.extend(urls)
     
     if output:
         cmd.extend(["--output", output])
     if no_images:
         cmd.append("--no-images")
+    if resume:
+        cmd.append("--resume")
     
-    result = subprocess.run(cmd, cwd=AMPLIFIER_PATH)
+    result = subprocess.run(cmd, cwd=TOOL_PATH)
     sys.exit(result.returncode)

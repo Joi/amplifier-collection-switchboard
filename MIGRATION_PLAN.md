@@ -10,55 +10,43 @@ Migration from `~/amplifier` (old system) to `~/amp-sb` (switchboard collection)
 | `~/micro-blog` | Notion→micro.blog | Active, standalone |
 | `~/amp-sb` | New `do` CLI | Active |
 
-## High Priority
+## Completed ✓
 
-### 1. transcribe
-**Source:** `~/amplifier/scenarios/transcribe`
-**Target:** `do transcribe <url>`
+### 1. transcribe ✓
+**Location:** `~/amp-sb/tools/tool-transcribe`
+**Command:** `do transcribe <url>`
 **Purpose:** YouTube/audio → searchable transcript with timestamps
 
-Features to migrate:
+Features migrated:
 - YouTube audio download (yt-dlp)
 - Whisper API transcription
-- Timestamp formatting
-- AI summaries/key quotes
+- Timestamp formatting with clickable links
+- AI summaries/key quotes (Claude)
+- Resume support for interrupted sessions
+- Index generation
 
-### 2. blog_writer  
-**Source:** `~/amplifier/scenarios/blog_writer`
-**Target:** `do blog write <idea.md>`
-**Purpose:** Transform rough ideas into blog posts matching your voice
-
-Features to migrate:
-- Style extraction from existing writings
-- Multi-stage drafting pipeline
-- Review/refinement loops
-
-### 3. micro-blog integration
-**Source:** `~/micro-blog`
-**Target:** `do blog export` / `do blog publish`
-**Purpose:** Notion→markdown→micro.blog pipeline
-
-Features to integrate:
-- `notion_blog/` - Export posts from Notion
-- `scripts/import_posts.py` - Publish to micro.blog via Micropub
-- Support for tea.ito.com (English) and cha.ito.com (Japanese)
-
-## Medium Priority
-
-### 4. web_to_md
-**Source:** `~/amplifier/scenarios/web_to_md`
-**Target:** `do web2md <url>`
+### 2. web2md ✓
+**Location:** `~/amp-sb/tools/tool-web2md`
+**Command:** `do web2md <url>`
 **Purpose:** Convert web pages to clean markdown
 
-Features:
-- Paywall detection
+Features migrated:
+- Paywall/auth wall detection
 - Image downloading
-- AI markdown cleanup
+- Domain-based organization
+- YAML frontmatter
+- Resume support
+- Index generation
 
-## Skip (Archive Only)
+### ~~3. micro-blog integration~~ → ONE-TIME TASK
+**Status:** Do via Claude directly, not as `do` command
+**Reason:** One-time Notion→micro.blog migration, then writing directly to micro.blog going forward
+
+## Not Migrating (Archive Only)
 
 | Tool | Reason |
 |------|--------|
+| blog_writer | Low use, can use Claude directly |
 | article_illustrator | No longer needed |
 | blog_poster | Superseded by micro-blog |
 | ideas_tracker | Old amplifier-specific |
@@ -68,30 +56,28 @@ Features:
 | knowledge_curator | Overlaps with `do knowledge` |
 | tools/*.py | Old amplifier utilities |
 
-## Proposed `do` Commands
+## Usage
 
 ```bash
 # Transcription
 do transcribe https://youtube.com/watch?v=...
 do transcribe podcast.mp3
-
-# Blogging
-do blog write idea.md                    # AI draft from idea
-do blog export --blog tea-journey        # Notion → markdown
-do blog publish --dir content/english    # markdown → micro.blog
+do transcribe video1.mp4 --resume
 
 # Web capture
 do web2md https://example.com/article
+do web2md https://site1.com https://site2.com --no-images
 ```
 
-## Migration Order
+## Output Locations
 
-1. **transcribe** - Independent, high value
-2. **blog commands** - Integrate micro-blog repo
-3. **web2md** - Nice to have
+| Tool | Output |
+|------|--------|
+| transcribe | `~/switchboard/transcripts/` |
+| web2md | `~/switchboard/sites/` |
 
 ## Notes
 
-- Keep `~/micro-blog` as-is for now, add `do` wrappers
-- `~/amplifier` stays for reference, stop active use
-- Each migrated tool becomes a Python module in `~/amp-sb/tools/`
+- `~/amplifier` can now be archived - no longer needed for active use
+- Each tool is a standalone Python module in `~/amp-sb/tools/`
+- Tools use local dependencies (no amplifier imports)
